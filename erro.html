@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Erro no Pagamento</title>
+  <style>
+    body {
+      font-size: 30px;
+      font-family: Arial, sans-serif;
+      background-color: #fff3e0;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      padding: 40px 30px;
+      background-color: #ffe0b2;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      animation: fadeSlide 0.6s ease forwards;
+    }
+
+    h1 {
+      color: #e65100;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 28px;
+      margin-bottom: 40px;
+    }
+
+    a.button {
+      font-size: 40px;
+      padding: 12px 40px;
+      background-color: #ef6c00;
+      color: white;
+      text-decoration: none;
+      border-radius: 15px;
+      cursor: pointer;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+
+    a.button:hover {
+      background-color: #e65100;
+    }
+
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>❌ Ocorreu um erro no pagamento</h1>
+    <p>Seu pagamento não foi concluído. Tente novamente mais tarde.</p>
+    <a href="index.html" class="button">Voltar</a>
+  </div>
+</body>
+</html>

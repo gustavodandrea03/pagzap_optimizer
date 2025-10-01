@@ -1,0 +1,315 @@
+body {
+  font-size: 30px;
+  font-family: 'Inter', sans-serif;
+  background-color: #e0e7eb; /* A cool, light grey-blue */
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 900px; /* Adjusted width to perfectly fit two cards with spacing */
+  padding: 40px;
+  background-color: #f7f9fa; /* Soft off-white for main container */
+  border-radius: 18px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1, h2 {
+  text-align: center;
+  color: #005f6b; /* Deep teal for headings */
+  margin-bottom: 35px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Forces exactly two columns */
+  gap: 30px; /* Generous spacing between cards */
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.card {
+  text-align: center;
+  position: relative;
+  padding: 30px; /* More padding inside cards */
+  background: #ffffff; /* Clean white card background */
+  border-radius: 15px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ebf1f5; /* Very subtle border */
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.card img {
+  width: 200px; /* Slightly larger images */
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+  margin: 0 auto 20px;
+  transition: transform 0.3s ease;
+}
+
+.card:hover img {
+  transform: scale(1.05);
+}
+
+.card h3 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.card p.price {
+  font-size: 24px;
+  color: #00798c; /* A slightly lighter teal for prices */
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+
+
+.add-btn {
+  font-size: 26px;
+  padding: 14px 25px;
+  background-color: #008c9e; /* Slightly brighter teal for add button */
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: auto;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.add-btn:hover {
+  background-color: #00798c;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+#pedido {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 30px;
+  font-size: 24px;
+  border-top: 1px solid #ebf1f5;
+  padding-top: 20px;
+}
+
+#pedido li {
+  background-color: #fcfdfe; /* Very light background for list items */
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  transition: background-color 0.2s ease;
+}
+
+#pedido li:hover {
+  background-color: #eaf3f6; /* Light highlight on hover */
+}
+
+button { /* This applies to the "Finalizar Pedido" button */
+  font-size: 30px;
+  padding: 18px 70px;
+  background-color: #005f6b; /* Primary button - deep teal */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  display: block;
+  margin: 40px auto 0;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+button:hover {
+  background-color: #00798c;
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+}
+
+/* Popups */
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: #ffffff;
+  padding: 45px;
+  border-radius: 20px;
+  width: 380px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  animation: fadeInScale 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.popup-content img.qr-img {
+  width: 250px;
+  height: 250px;
+  margin-top: 25px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.popup-content .close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  cursor: pointer;
+  font-size: 32px;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.popup-content .close:hover {
+  color: #005f6b; /* Teal for close button on hover */
+}
+
+.popup-descricao {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  padding: 35px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  z-index: 1000;
+  border-radius: 20px;
+  max-width: 550px;
+  max-height: 80%;
+  overflow-y: auto;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  animation: fadeInScale 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.popup-descricao .fechar-popup {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background: transparent;
+  border: none;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.popup-descricao .fechar-popup:hover {
+  color: #005f6b;
+}
+
+.popup-descricao h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #005f6b;
+  font-size: 34px;
+  letter-spacing: -0.5px;
+}
+
+.popup-descricao p {
+  font-size: 22px;
+  line-height: 1.7;
+  color: #555;
+}
+
+/* Animations and feedback */
+.flash {
+  animation: flashBackground 0.5s ease-out;
+}
+
+@keyframes flashBackground {
+  0% { background-color: #ebf1f5; } /* Flash with light blue-grey */
+  100% { background-color: transparent; }
+}
+
+.pulse {
+  animation: pulseButton 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+@keyframes pulseButton {
+  0%, 100% {
+      box-shadow: 0 0 15px #008c9e, 0 0 0 0 rgba(0,140,158,0.7);
+  }
+  50% {
+      box-shadow: 0 0 30px #008c9e, 0 0 0 10px rgba(0,140,158,0.2);
+  }
+}
+
+.add-btn.clicked {
+  background-color: #004d55 !important; /* Darker teal for clicked state */
+  transform: scale(0.9);
+  transition: background-color 0.15s, transform 0.15s;
+}
+
+.mensagem-flutuante {
+  position: fixed;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #28a745; /* A standard, professional green for success */
+  color: white;
+  padding: 18px 35px;
+  border-radius: 12px;
+  font-size: 26px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+  display: none;
+  z-index: 9999;
+  animation: fadeInOutSlide 2.8s ease-in-out forwards;
+}
+
+@keyframes fadeInOutSlide {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
+  10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-50px); }
+}

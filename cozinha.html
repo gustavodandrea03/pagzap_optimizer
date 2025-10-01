@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Interface da Cozinha</title>
+  <style>
+    /* --- CSS isolado para painel da cozinha --- */
+
+    .cozinha-body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f3f3f3;
+    }
+
+    .cozinha-title {
+      font-weight: bold;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .cozinha-cabecalho-mesas {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .cozinha-cabecalho-mesas th {
+      width: 100px;
+      height: 100px;
+      font-weight: bold;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      color: black;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+    }
+
+    .cozinha-table {
+      width: 100%;
+      max-width: 800px;
+      margin: auto;
+      background-color: white;
+      border-collapse: separate;
+      border-spacing: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .cozinha-corpo-pedidos tr {
+      /* espaçamento vertical entre linhas */
+      margin-bottom: 10px;
+    }
+
+    .cozinha-corpo-pedidos td {
+      border-left: 8px solid #ccc;
+      padding: 10px;
+      background: white;
+      border-radius: 5px;
+      vertical-align: top;
+      width: 100px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+      font-size: 14px;
+      color: #333;
+    }
+
+    .cozinha-corpo-pedidos td strong {
+      display: inline-block;
+      width: 100px;
+      font-weight: 600;
+    }
+
+    .cozinha-corpo-pedidos td button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #2e8b57;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background-color 0.3s ease;
+    }
+
+    .cozinha-corpo-pedidos td button:hover {
+      background-color: #246b44;
+    }
+  </style>
+</head>
+<body class="cozinha-body">
+  <h1 class="cozinha-title">Painel da Cozinha</h1>
+
+  <table class="cozinha-table">
+    <thead>
+      <tr id="cabecalho-mesas" class="cozinha-cabecalho-mesas"></tr>
+    </thead>
+    <tbody id="corpo-pedidos" class="cozinha-corpo-pedidos"></tbody>
+  </table>
+
+ <script>
+  const TEMPO_COMENDO = 300000; // 5 minutos (você pode alterar para testar)
+  const mesasComendo = new Set(); // Armazena quais mesas estão "comendo"
+
+  function buscarDados() {
+    fetch("http://localhost:3000/pedidos")
+      .then(res => res.json())
+      .then(data => {
+        atualizarCabecalhoMesas(data.mesas);
+        atualizarPedidos(data.pedidos);
+      })
+      .catch(erro => console.error("Erro ao buscar dados:", erro));
+  }
+
+  function atualizarCabecalhoMesas(mesas) {
+    const cabecalho = document.getElementById("cabecalho-mesas");
+    cabecalho.innerHTML = "";
+
+    mesas.forEach(mesa => {
+      const th = document.createElement("th");
+      th.textContent = `Mesa ${mesa.mesa}`;
+
+      if (mesa.status === "comendo") {
+        th.style.backgroundColor = "#4fa3f7"; // azul: comendo
+      } else if (mesa.status === "aguardando") {
+        th.style.backgroundColor = "#f9d342"; // amarelo: aguardando
+      } else {
+        th.style.backgroundColor = "#69ce74"; // verde: livre
+      }
+
+      cabecalho.appendChild(th);
+    });
+  }
+
+  function atualizarPedidos(pedidos) {
+    if (!Array.isArray(pedidos)) {
+      console.error("Pedidos inválidos recebidos:", pedidos);
+      return;
+    }
+
+    const pedidosPorMesa = {};
+
+    pedidos.forEach(pedido => {
+      if (!pedidosPorMesa[pedido.mesa]) {
+        pedidosPorMesa[pedido.mesa] = [];
+      }
+
+      if (pedido.status === "pendente" || pedido.status === "aguardando") {
+        pedidosPorMesa[pedido.mesa].push(pedido);
+      }
+    });
+
+    const corpo = document.getElementById("corpo-pedidos");
+    corpo.innerHTML = "";
+
+    // Calcula a quantidade máxima de pedidos em qualquer mesa
+    const maxPedidos = Math.max(...Object.values(pedidosPorMesa).map(p => p.length), 0);
+
+    for (let i = 0; i < maxPedidos; i++) {
+      const tr = document.createElement("tr");
+
+      Object.keys(pedidosPorMesa).forEach(mesa => {
+        const td = document.createElement("td");
+        const pedido = pedidosPorMesa[mesa][i];
+
+        if (pedido) {
+          const listaItens = pedido.itens.map(item => `• ${item.nome}`).join("<br>");
+          td.innerHTML = `
+            <strong>Pedido:</strong> ${pedido.id}<br>
+            ${listaItens}<br>
+            <strong>Total:</strong> R$${pedido.total}<br>
+            <button onclick="marcarComoEntregue('${pedido.id}', '${pedido.mesa}')">Entregar</button>
+          `;
+        }
+
+        tr.appendChild(td);
+      });
+
+      corpo.appendChild(tr);
+    }
+  }
+
+  function marcarComoEntregue(id, mesa) {
+    fetch(`http://localhost:3000/pedidos/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ status: "entregue" })
+    })
+      .then(res => {
+        if (!res.ok) throw new Error(`Erro HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(() => {
+        mesasComendo.add(mesa);     // Marca a mesa como "comendo"
+        buscarDados();              // Atualiza interface
+
+        setTimeout(() => {
+          mesasComendo.delete(mesa); // Libera a mesa depois do tempo
+          buscarDados();             // Atualiza interface de novo
+        }, TEMPO_COMENDO);
+      })
+      .catch(err => console.error("Erro ao atualizar pedido:", err));
+  }
+
+  // Atualizações automáticas a cada 5 segundos
+  setInterval(buscarDados, 5000);
+  buscarDados(); // Primeira chamada
+</script>
+
+</body>
+</html>

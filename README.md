@@ -1,2 +1,2 @@
-# pagzap_optimizer
-- npm install axios cors express
+npm init -y
+>> npm install express axios cors
