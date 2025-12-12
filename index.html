@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>PagZap - Comandas</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
+  margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Estilo para a Barra de Navegação - agora de largura total */
+    .navbar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      background-color: #1c3d5a;
+      padding: 10px 0;
+      margin-bottom: 30px;
+      width: 100%; /* <-- Adicionado para preencher toda a largura */
+    }
+    .navbar a {
+      color: #f0f4f8;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .navbar a:hover {
+      background-color: #495057;
+    }
+    .navbar a.active {
+      background-color: #007bff;
+    }
+
+    h1 {
+      font-weight: 600;
+      text-align: center;
+      color: #1c3d5a;
+      margin-bottom: 30px;
+    }
+
+    #mesas-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .mesa {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .mesa:hover { 
+      transform: scale(1.03); 
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .status {
+      display: inline-block;
+      margin: 8px 0;
+      padding: 6px 10px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+    }
+    .status.livre { background-color: #28a745; }
+    .status.aguardando { background-color: #ffc107; }
+    .status.comendo { background-color: #17a2b8; }
+    .status.pago { background-color: #007bff; }
+
+    #cardapio {
+      display: none;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      margin: 20px auto 40px auto;
+      max-width: 1000px;
+      
+    }
+
+    .itens {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsivo com tamanho mínimo */
+        gap: 15px;
+    }
+
+    .item {
+        border: 2px solid transparent;
+        border-radius: 10px;
+        padding: 10px;
+        transition: all 0.3s ease-in-out; /* Adicionamos a transição para a animação ser suave */
+    text-align: center;
+    cursor: pointer;
+    background-color: #fff; /* Garante que o fundo seja branco */
+}
+
+/* EFEITO HOVER: Animação ao passar o mouse */
+.item:hover {
+    transform: scale(1.03); /* Aumenta ligeiramente o tamanho (Animação) */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Adiciona uma sombra mais forte */
+}
+
+    .item img {
+      width: 100%;
+      height: 120px;
+      border-radius: 8px;
+      object-fit: contain;
+      margin-bottom: 8px;
+    }
+    .item.selecionado {
+      border-color: #28a745;
+      background-color: #e7f9ed;
+      box-shadow: 0 0 10px rgba(40, 167, 69, 0.5); /* Sombra mais destacada ao ser selecionado */
+    transform: scale(1.02); /* Mantém uma leve escala quando está selecionado */
+    }
+
+    button.finalizar {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button.finalizar:hover { background-color: #0056b3; }
+
+    /* Container PIX (Adicionamos um fundo mais sólido e sombra melhor) */
+#pix-container {
+    display: none; 
+    max-width: 420px;
+    margin: 30px auto;
+    padding: 30px; /* Aumenta o padding interno */
+    border-radius: 16px; /* Borda mais suave */
+    background: #ffffff; /* Fundo branco limpo */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Sombra mais destacada */
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+#pix-container h3 {
+    font-size: 1.6em;
+    color: #1c3d5a;
+    margin-bottom: 25px;
+}
+
+/* Ajuste o botão Fechar */
+#pix-container button[onclick="fecharPix()"] {
+    background: #6c757d; 
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+    .navbar {
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 15px 10px;
+    }
+
+    /* Container do Resumo do Pedido */
+#resumo {
+    background-color: #f8f9fa; /* Fundo levemente cinza */
+    border: 1px solid #dee2e6; /* Borda sutil */
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+/* Títulos dentro do Resumo */
+#resumo h3 {
+    color: #1c3d5a;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+/* Estilo para a lista de itens no resumo */
+#itens-resumo {
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+/* Destaque para o Total */
+#total {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+
+/* Botão Principal: Confirmar Pedido */
+#confirmar-pedido {
+    background-color: #28a745; /* Verde de sucesso */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 700;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-bottom: 10px;
+}
+#confirmar-pedido:hover {
+    background-color: #1e7e34;
+}
+
+/* Botão Secundário: Voltar */
+#voltar {
+    background-color: #6c757d; /* Cinza secundário */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+#voltar:hover {
+    background-color: #5a6268;
+}
+
+#toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #333;
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    opacity: 0; /* Inicia invisível */
+    transition: opacity 0.5s, transform 0.3s; /* Adiciona a transição */
+    transform: translateY(20px);
+    z-index: 1000;
+}
+#toast.show {
+    opacity: 1; /* Torna visível quando a classe .show é adicionada pelo JS */
+    transform: translateY(0);
+}
+  </style>
+
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+  <script>
+    const MP_PUBLIC_KEY = "APP_USR-5f30d4b8-0efe-464f-adf5-2c5991db0e48";
+    const mp = new MercadoPago(MP_PUBLIC_KEY, { locale: "pt-BR" });
+    let pixBrick = null;
+  </script>
+</head>
+
+<body>
+  <!-- Navbar movida para fora do app-container e agora ocupa largura total -->
+  <nav class="navbar" id="main-navbar">
+    <a href="index.html" id="nav-comandas">Monitoramento de Mesas</a>
+    <a href="cozinha.html" id="nav-cozinha">Painel da Cozinha</a>
+    <a href="gestor.html" id="nav-gestor">Gestão de Cardápio</a>
+    <a href="relatorio.html" id="nav-relatorio">Relatório de Vendas</a>
+  </nav>
+
+  <div class="app-container">
+    <div id="mesas-container-geral">
+      <h1>📋 Painel de Comandas - PagZap</h1>
+      <div id="mesas-container"></div>
+    </div>
+
+    <div id="cardapio" style="display:none"></div>
+    <div id="toast"></div>
+  </div>
+
+  <div id="pix-container">
+    <h3>Pagamento PIX</h3>
+    <div id="pix-brick"></div>
+    <button onclick="fecharPix()" style="margin-top:15px; background:#6c757d; color:white; padding:8px 15px; border:none; border-radius:8px; cursor:pointer;">Fechar</button>
+  </div>
+
+  <script>
+    const API_URL = "http://localhost:3000";
+    let intervaloMesas = null;
+    let itensSelecionados = [];
+    let mesaAtual = null;
+    
+    function showToast(msg, color="#333") {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.style.backgroundColor = color;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+    window.onload = () => {
+      const params = new URLSearchParams(window.location.search);
+      const mesaUrl = params.get('mesa');
+
+      const mesasContainerGeral = document.getElementById("mesas-container-geral");
+      const navbar = document.getElementById("main-navbar");
+      
+      if (mesaUrl && !isNaN(parseInt(mesaUrl))) {
+        if (mesasContainerGeral) {
+          mesasContainerGeral.style.display = 'none';
+        }
+        if (navbar) {
+          navbar.style.display = 'none';
+        }
+        abrirCardapio(parseInt(mesaUrl)); 
+      } else {
+        document.getElementById('nav-comandas').classList.add('active');
+        carregarMesas();
+        intervaloMesas = setInterval(carregarMesas, 5000);
+      }
+    };
+
+    async function carregarMesas() {
+      try {
+        const resposta = await fetch(`${API_URL}/pedidos`);
+        const dados = await resposta.json();
+
+        const container = document.getElementById("mesas-container");
+        container.innerHTML = "";
+
+        dados.mesas.forEach(mesa => {
+          const pedidoMesa = dados.pedidos.find((p) => p.mesa === mesa.mesa && p.status !== 'livre');
+          
+          let status = mesa.status;
+          if (pedidoMesa?.status === "pago") {
+            status = "pago";
+          } else if (pedidoMesa?.status === "comendo") {
+            status = "comendo";
+          } else if (pedidoMesa?.status === "aguardando" || pedidoMesa?.status === "pendente") {
+            status = "aguardando";
+          }
+          
+          const div = document.createElement("div");
+          div.classList.add("mesa");
+
+          div.innerHTML = `
+            <h2>Mesa ${mesa.mesa}</h2>
+            <span class="status ${status}">${status.toUpperCase()}</span>
+            <br>
+          `;
+
+          container.appendChild(div);
+        });
+
+      } catch (erro) {
+        console.error("Erro ao carregar mesas:", erro);
+      }
+    }
+
+    const CARDAPIO_FIXO = { "Pratos": [], "Lanches": [], "Bebidas": [], "Sobremesas": [] };
+
+    async function abrirCardapio(mesa) {
+      clearInterval(intervaloMesas);
+      mesaAtual = mesa;
+
+      const cardapioDiv = document.getElementById("cardapio");
+      cardapioDiv.innerHTML = "";
+      cardapioDiv.style.display = "block";
+
+      const resposta = await fetch(`${API_URL}/pratos`);
+      const pratosGestor = await resposta.json();
+
+      const agrupado = structuredClone(CARDAPIO_FIXO);
+      pratosGestor.forEach(prato => {
+        if (!agrupado[prato.categoria]) agrupado[prato.categoria] = [];
+        agrupado[prato.categoria].push(prato);
+      });
+
+      cardapioDiv.innerHTML += `<h2>🍴 Cardápio - Mesa ${mesa}</h2>`;
+
+      Object.entries(agrupado).forEach(([categoria, itens]) => {
+        if (itens.length === 0) return;
+
+        const catDiv = document.createElement("div");
+        catDiv.classList.add("categoria");
+
+        catDiv.innerHTML = `<h3>${categoria}</h3><div class="itens"></div>`;
+        const itensDiv = catDiv.querySelector(".itens");
+
+        itens.forEach(item => {
+          const itemDiv = document.createElement("div");
+          itemDiv.classList.add("item");
+
+          itemDiv.innerHTML = `
+            <img src="${item.imagem}" alt="${item.nome}">
+            <h3>${item.nome}</h3>
+            <span>R$ ${item.preco.toFixed(2)}</span>
+          `;
+
+          itemDiv.onclick = () => toggleItem(itemDiv, item, categoria);
+          itensDiv.appendChild(itemDiv);
+        });
+
+        cardapioDiv.appendChild(catDiv);
+      });
+
+      const resumo = document.createElement("div");
+      resumo.id = "resumo";
+      resumo.innerHTML = `
+        <h3>🧾 Resumo do Pedido</h3>
+        <p id="itens-resumo">Nenhum item selecionado.</p>
+        <p id="total">Total: R$ 0.00</p>
+        <button id="confirmar-pedido" onclick="confirmarPedido()">Confirmar Pedido</button><br>
+        <button id="voltar" onclick="voltar()">Voltar</button>
+      `;
+      cardapioDiv.appendChild(resumo);
+    }
+
+    function toggleItem(div, item, categoria) {
+        // Encontra o índice do item, mas apenas para fins de verificar se ele JÁ está no pedido
+        const index = itensSelecionados.findIndex(i => i.nome === item.nome);
+        const itemExistente = itensSelecionados.find(i => i.nome === item.nome); // Verifica se o item já existe
+
+        // Se o item JÁ EXISTIR, vamos apenas aumentar a quantidade, não remover.
+        if (itemExistente) {
+            // Aumentar a quantidade (Adicionar mais 1)
+            itemExistente.quantidade = (itemExistente.quantidade || 1) + 1;
+            showToast(`+1 ${item.nome} adicionado.`);
+        } else {
+            // Se o item for novo, adiciona-o ao pedido com quantidade 1
+            itensSelecionados.push({ 
+                ...item, 
+                categoria, 
+                custo: item.preco * 0.5,
+                quantidade: 1 // Adiciona a propriedade quantidade
+            });
+            showToast(`${item.nome} adicionado.`);
+        }
+
+        // -------------------------------------------------------------
+        // NOVO: Lógica de Piscar (Feedback Visual)
+        // -------------------------------------------------------------
+        div.classList.add("selecionado");
+        
+        // Remove a classe 'selecionado' após 1 segundo (1000ms)
+        setTimeout(() => {
+            div.classList.remove("selecionado");
+        }, 1000);
+        //
+
+      atualizarResumo();
+    }
+
+    function atualizarResumo() {
+        const resumoDiv = document.getElementById("itens-resumo");
+        const totalDiv = document.getElementById("total");
+
+        if (itensSelecionados.length === 0) {
+            resumoDiv.textContent = "Nenhum item selecionado.";
+            totalDiv.textContent = "Total: R$ 0.00";
+            return;
+        }
+
+        // NOVO: Exibe a quantidade e o total daquele item
+        resumoDiv.innerHTML = itensSelecionados
+            .map(i => {
+                const subtotal = i.preco * (i.quantidade || 1);
+                return `${i.nome} (${i.categoria}) x${i.quantidade || 1} - R$ ${subtotal.toFixed(2)}`;
+            })
+            .join("<br>");
+
+        // NOVO: Calcula o total geral multiplicando preço x quantidade
+        const total = itensSelecionados.reduce((acc, i) => acc + (i.preco * (i.quantidade || 1)), 0);
+        totalDiv.textContent = `Total: R$ ${total.toFixed(2)}`;
+    }
+    
+    async function confirmarPedido() {
+      if (itensSelecionados.length === 0) {
+        showToast("⚠️ Selecione ao menos um item.", "#dc3545");
+        return;
+      }
+
+      const totalPedido = itensSelecionados.reduce((acc, i) => acc + i.preco, 0);
+
+      const pedido = {
+        mesa: mesaAtual.toString(),
+        itens: itensSelecionados,
+        total: totalPedido,
+        status: "pendente",
+      };
+
+      try {
+        const resposta = await fetch(`${API_URL}/pedidos`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(pedido),
+        });
+
+        const pedidoCriado = await resposta.json();
+
+        showToast("Gerando PIX...", "#28a745");
+
+        const pixReq = await fetch(`${API_URL}/create_pix`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: pedidoCriado.id,
+            total: totalPedido,
+          }),
+        });
+
+        const pixData = await pixReq.json();
+
+        if (!pixData || !pixData.payment || !pixData.payment.qr_code_base64) {
+          showToast("❌ Erro ao iniciar PIX.", "#dc3545");
+          console.error("Dados PIX inválidos:", pixData);
+          return;
+        }
+
+        const paymentId = pixData.payment.payment_id;
+        const imgBase64 = pixData.payment.qr_code_base64;
+        const copiaCola = pixData.payment.qr_code;
+
+        document.getElementById("cardapio").style.display = "none";
+        document.getElementById("pix-container").style.display = "block";
+        
+        const pixContainer = document.getElementById("pix-brick");
+        pixContainer.innerHTML = `
+            <p style="font-weight: 600; font-size: 1.1em; color: #28a745; margin-bottom: 10px;">
+              ESCANEIE PARA PAGAR
+            </p>
+            <img src="data:image/png;base64,${imgBase64}" style="width: 250px; margin: 5px auto 20px auto; display: block; border: 1px solid #ccc; border-radius: 5px;">
+            
+            <hr style="margin: 20px 0; border-color: #eee;">
+            
+            <p style="font-weight: 600; color: #dc3545; margin-bottom: 20px;">
+              AMBIENTE DE SIMULAÇÃO
+            </p>
+            
+            <button id="btnAprovar" onclick="simularAprovacao('${paymentId}')" 
+                    style="background:#28a745; color:white; padding:12px 20px; border:none; border-radius:8px; cursor:pointer; font-weight: 600;">
+                ✅ Pagar (Simular Transação Real)
+            </button>
+            
+        `;
+
+      } catch (erro) {
+        console.error("Erro ao confirmar:", erro);
+        showToast("Erro ao processar pedido.", "#dc3545");
+      }
+    }
+
+    async function aprovarViaPayload(expectedPaymentId) {
+        const payload = document.getElementById('payloadInput').value.trim();
+        
+        if (!payload) {
+            return showToast("Por favor, cole o Payload PIX para simular a leitura.", "#dc3545");
+        }
+        
+        if (!payload.startsWith('000201')) {
+             return showToast("Payload inválido. Cole o código PIX completo.", "#dc3545");
+        }
+
+        simularAprovacao(expectedPaymentId); 
+    }
+
+    async function simularAprovacao(paymentId) {
+        if (!paymentId) return showToast("ID do pagamento é obrigatório.", "#dc3545");
+        
+        const btn = document.getElementById('btnAprovar');
+        btn.disabled = true;
+        btn.textContent = 'Aprovando...';
+
+        try {
+            const resposta = await fetch(`${API_URL}/pagamentos/${paymentId}/aprovar`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            const dados = await resposta.json();
+
+            if (resposta.ok && dados.status === 'approved') {
+                showToast("✅ Pagamento APROVADO (Simulado)!", "#28a745");
+                btn.textContent = '✔️ APROVADO!';
+                
+                setTimeout(() => {
+                    fecharPix(true);
+                }, 1500);
+
+            } else {
+                showToast("❌ Falha na simulação de aprovação.", "#dc3545");
+                btn.textContent = '❌ Falhou!';
+                console.error("Resposta da Simulação:", dados);
+            }
+        } catch (erro) {
+            console.error("Erro de rede/simulação:", erro);
+            showToast("Erro de rede ao simular aprovação.", "#dc3545");
+            btn.textContent = '❌ Falhou!';
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    function fecharPix(recarregarCardapio = false) {
+      document.getElementById("pix-container").style.display = "none";
+      
+      const params = new URLSearchParams(window.location.search);
+      const isClienteMode = params.get('mesa');
+      
+      if (isClienteMode && recarregarCardapio) {
+          itensSelecionados = [];
+          abrirCardapio(mesaAtual);
+      }
+      
+      if (!isClienteMode && !intervaloMesas) {
+        intervaloMesas = setInterval(carregarMesas, 5000);
+      }
+    }
+function voltar() {
+        // Verifica se estamos no Modo Cliente (via URL ?mesa=X)
+        const params = new URLSearchParams(window.location.search);
+        const isClienteMode = params.get('mesa');
+        
+        if (isClienteMode) {
+            // MODO CLIENTE (Acessado via QR Code)
+            
+            if (itensSelecionados.length > 0) {
+                // Se houver itens selecionados, limpa a seleção e volta para o cardápio
+                itensSelecionados = [];
+                atualizarResumo(); // Limpa o visual do resumo
+                showToast("Seleção de itens cancelada.", "#dc3545"); 
+            }
+            
+            // Reabre o cardápio (se estiver escondido, como no resumo)
+            document.getElementById("cardapio").style.display = "block";
+            document.getElementById("resumo").style.display = "block"; // O Resumo já faz parte do cardapioDiv, mas garantimos que está visível.
+            
+            // O botão "Voltar" no resumo do pedido do cliente deve voltar para a seleção de itens.
+            // Se o botão "Voltar" estiver sendo exibido após o PIX, ele deve voltar para o Cardápio (ou para o estado inicial).
+            
+            // Se o botão for clicado na tela de resumo/seleção, garantimos que a seleção está limpa e voltamos para a vista principal.
+            
+            // Não faça nada que tire o cliente da mesa.
+            return;
+        } 
+        
+        // MODO GESTÃO/GARÇOM (Neste modo, o botão "Voltar" só aparece se estiver em 'abrirCardapio' 
+        // e ele deve, sim, voltar para o monitoramento de mesas).
+        
+        document.getElementById("cardapio").style.display = "none";
+        itensSelecionados = [];
+        // Reativa o monitoramento de mesas
+        if (!intervaloMesas) {
+            document.getElementById("mesas-container-geral").style.display = 'block';
+            intervaloMesas = setInterval(carregarMesas, 5000);
+        }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+{
+  "pedidos": [
+    {
+      "id": "oee77gdh",
+      "payment_id": 1325652340,
+      "status": "pendente",
+      "mesa": "5",
+      "itens": [
+        {
+          "id": "p4",
+          "nome": "Hamburguer",
+          "preco": 25,
+          "categoria": "Lanches",
+          "imagem": "/imagens/hamburguer.jpg",
+          "custo": 12.5,
+          "quantidade": 1
+        }
+      ],
+      "total": 25
+    }
+  ],
+  "vendas": [
+    {
+      "nome": "X-Burger",
+      "categoria": "Lanches",
+      "custo": 9,
+      "quantidade": 3,
+      "receita": 54
+    },
+    {
+      "nome": "Batata Frita",
+      "categoria": "Lanches",
+      "custo": 6,
+      "quantidade": 4,
+      "receita": 50
+    },
+    {
+      "nome": "Lasanha Bolonhesa",
+      "categoria": "Pratos",
+      "custo": 14,
+      "quantidade": 8,
+      "receita": 224
+    },
+    {
+      "nome": "Prato Executivo",
+      "categoria": "Pratos",
+      "custo": 12.5,
+      "quantidade": 2,
+      "receita": 50
+    },
+    {
+      "nome": "Refrigerante",
+      "categoria": "Bebidas",
+      "custo": 3,
+      "quantidade": 21,
+      "receita": 144
+    },
+    {
+      "nome": "Suco Natural",
+      "categoria": "Bebidas",
+      "custo": 4,
+      "quantidade": 23,
+      "receita": 184
+    },
+    {
+      "nome": "Mousse de Chocolate",
+      "categoria": "Sobremesas",
+      "custo": 4.5,
+      "quantidade": 25,
+      "receita": 225
+    },
+    {
+      "nome": "Pudim",
+      "categoria": "Sobremesas",
+      "custo": 5,
+      "quantidade": 24,
+      "receita": 242
+    },
+    {
+      "nome": "Alaminuta",
+      "categoria": "Pratos",
+      "custo": 12.5,
+      "quantidade": 69,
+      "receita": 1725
+    },
+    {
+      "nome": "Hamburguer",
+      "categoria": "Lanches",
+      "custo": 12.5,
+      "quantidade": 3,
+      "receita": 75
+    }
+  ],
+  "gestor": {
+    "usuario": "admin",
+    "senha": "1234"
+  },
+  "pratos": [
+    {
+      "id": "p1",
+      "nome": "Alaminuta",
+      "preco": 25,
+      "categoria": "Pratos",
+      "imagem": "/imagens/prato_executivo.png"
+    },
+    {
+      "id": "p4",
+      "nome": "Hamburguer",
+      "preco": 25,
+      "categoria": "Lanches",
+      "imagem": "/imagens/hamburguer.jpg"
+    },
+    {
+      "id": "p5",
+      "nome": "Batata Frita",
+      "preco": 13,
+      "categoria": "Lanches",
+      "imagem": "/imagens/batata_frita.jpg"
+    },
+    {
+      "id": "p6",
+      "nome": "Refrigerante",
+      "preco": 7,
+      "categoria": "Bebidas",
+      "imagem": "/imagens/refrigerante.png"
+    },
+    {
+      "id": "p7",
+      "nome": "Suco Natural",
+      "preco": 8,
+      "categoria": "Bebidas",
+      "imagem": "/imagens/suco.jpg"
+    },
+    {
+      "id": "p8",
+      "nome": "Pudim",
+      "preco": 11,
+      "categoria": "Sobremesas",
+      "imagem": "/imagens/pudim.jpg"
+    },
+    {
+      "id": "p9",
+      "nome": "Mousse de Chocolate",
+      "preco": 9,
+      "categoria": "Sobremesas",
+      "imagem": "/imagens/mousse.jpg"
+    }
+  ]
+}

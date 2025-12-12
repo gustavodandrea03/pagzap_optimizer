@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Painel do Gestor - PagZap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    /* Navbar centralizada - mantida como você queria */
+    .navbar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      background-color: #1c3d5a;
+      padding: 10px 0;
+      margin-bottom: 30px;
+    }
+    .navbar a {
+      color: #f0f4f8;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .navbar a:hover {
+      background-color: #495057;
+    }
+    .navbar a.active {
+      background-color: #007bff;
+    }
+
+    /* Container principal centralizado */
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      color: #1c3d5a;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      background: #f1f7ff;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: 700;
+      color: #007bff;
+      font-size: 0.9em;
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+    }
+    .stat.relatorio {
+      background: #fff3cd;
+      color: #856404;
+      cursor: pointer;
+    }
+
+    .search {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .search input {
+      flex: 1;
+    }
+
+ .prato { 
+    display:flex; 
+    gap:12px; 
+    align-items:center; 
+    margin-bottom:12px; 
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 10px; 
+    transition: background-color 0.2s; /* Transição para o hover */
+}
+
+.prato:hover {
+    background-color: #f8f9fa; /* Fundo suave ao passar o mouse */
+    border-radius: 8px; /* Borda para a área do hover */
+    padding-left: 5px; /* Pequeno recuo para visual */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Sombra suave */
+}
+    .prato img { 
+    width:100px; 
+    height:70px; 
+    object-fit:cover; 
+    border-radius:6px; 
+}
+.prato .info { flex:1; }
+
+
+    /* Ações (Editar/Remover) - Estilizando botões na lista */
+.prato .acoes button { 
+    margin-left:6px; 
+    font-size: 0.8em; 
+    padding: 6px 8px; 
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+.prato .acoes button:not(.warn) {
+    background-color: #007bff; /* Azul para Editar */
+    color: white;
+    border: none;
+}
+.prato .acoes button:not(.warn):hover {
+    background-color: #0056b3;
+}
+
+/* Botão Remover */
+.prato .acoes button.warn { 
+    background-color: #dc3545; /* Vermelho para Remover */
+}
+.prato .acoes button.warn:hover {
+    background-color: #c82333;
+}
+
+/* Stats (Adicionando Efeito de Hover) */
+.stat { 
+    background:#f1f7ff; 
+    padding:10px 15px; 
+    border-radius:8px; 
+    font-weight:700; 
+    color:#007bff; 
+    font-size: 0.9em; 
+    flex-grow: 1;
+    text-align: center;
+    transition: transform 0.2s;
+}
+.stat:hover {
+    transform: translateY(-2px); /* Efeito de elevação sutil */
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.1); /* Sombra azul para destaque */
+}
+
+/* Estilo específico para o STAT de Relatório (Ver Relatório Menu Engineering) */
+.stat a .stat {
+    cursor: pointer;
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+}
+.stat a .stat:hover {
+    background-color: #ffe08a !important; /* Amarelo mais escuro ao passar o mouse */
+}
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 600;
+      font-size: 0.9em;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      margin-top: 4px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    button.primary {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-weight: 700;
+    }
+    button.warn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .logout {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .small { font-size: 13px; color: #666; }
+    .msg-inline {
+      color: #28a745;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .navbar {
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 15px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar mantida centralizada -->
+  <nav class="navbar" id="main-navbar">
+    <a href="index.html" id="nav-comandas">Monitoramento de Mesas</a>
+    <a href="cozinha.html" id="nav-cozinha">Painel da Cozinha</a>
+    <a href="gestor.html" id="nav-gestor" class="active">Gestão de Cardápio</a>
+    <a href="relatorio.html" id="nav-relatorio">Relatório de Vendas</a>
+  </nav>
+
+  <div class="app-container">
+    <header>
+      <h1>Painel do Gestor - PagZap</h1>
+      <button class="logout" onclick="logout()">Sair</button>
+    </header>
+
+    <div class="grid">
+      <!-- Lista de pratos + estatísticas -->
+      <div class="card">
+        <div class="stats">
+          <div class="stat" id="total-pratos">Pratos: 0</div>
+          <div class="stat" id="total-categorias">Categorias: 0</div>
+          <div class="stat" id="total-vendas">Vendas: 0</div>
+          <a href="relatorio.html" style="text-decoration:none; display:block;">
+            <div class="stat relatorio">Ver Relatório Menu Engineering</div>
+          </a>
+        </div>
+
+        <div class="search">
+          <input id="busca" placeholder="Buscar prato por nome..." oninput="listarPratos()" />
+          <button onclick="listarPratos()">Buscar</button>
+        </div>
+
+        <h3>Cardápio</h3>
+        <div id="pratos"></div>
+      </div>
+
+      <!-- Formulário de adicionar/editar -->
+      <div class="card">
+        <h3>Adicionar / Editar Prato</h3>
+        <label>Nome</label>
+        <input id="nome" />
+        <label>Preço</label>
+        <input id="preco" type="number" step="0.01" />
+        <label>Categoria</label>
+        <select id="categoria">
+          <option>Pratos</option>
+          <option>Lanches</option>
+          <option>Bebidas</option>
+          <option>Sobremesas</option>
+          <option>Outros</option>
+        </select>
+        <label>Imagem (apenas o nome do arquivo)</label>
+                <input id="imagem" 
+               value="/imagens/" 
+               placeholder="ex: meu_prato.jpg" 
+               onfocus="this.select()"
+        />
+        
+        <div style="display:flex; gap:8px; margin-top:15px;">
+          <button class="primary" onclick="salvarPrato()">Salvar</button>
+          <button type="button" onclick="limparForm()">Limpar</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://localhost:3000";
+    const token = localStorage.getItem("pagzap_token");
+    if (!token) {
+      window.location.href = "gestor-login.html";
+    }
+
+    // Ativa o link atual na navbar E inicializa a lista de pratos
+    document.addEventListener('DOMContentLoaded', () => {
+      const navGestor = document.getElementById('nav-gestor');
+      if (navGestor) navGestor.classList.add('active');
+      
+      // CORREÇÃO: Chamada única para carregar os pratos após o DOM estar pronto
+      listarPratos();
+    });
+
+    // A linha "window.onload = listarPratos;" foi removida permanentemente para evitar a duplicação.
+
+    async function listarPratos() {
+      try {
+        const q = document.getElementById("busca").value.trim().toLowerCase();
+        const res = await fetch(API + "/pratos");
+        const pratos = await res.json();
+        const container = document.getElementById("pratos");
+        container.innerHTML = "";
+
+        const filtrados = pratos.filter(p => !q || p.nome.toLowerCase().includes(q));
+        const categorias = [...new Set(pratos.map(p => p.categoria || "Outros"))];
+
+        document.getElementById("total-pratos").textContent = `Pratos: ${pratos.length}`;
+        document.getElementById("total-categorias").textContent = `Categorias: ${categorias.length}`;
+
+        let vendasCount = 0;
+        try {
+          const vres = await fetch(API + "/analise-cardapio");
+          if (vres.ok) {
+            const anal = await vres.json();
+            vendasCount = (anal && anal.analise && anal.analise.length) || 0;
+          }
+        } catch (e) {}
+
+        document.getElementById("total-vendas").textContent = `Vendas: ${vendasCount}`;
+
+        filtrados.forEach(p => {
+          const div = document.createElement("div");
+          div.className = "prato";
+          div.innerHTML = `
+            <img src="${p.imagem || '/mnt/data/A_high-resolution_digital_photograph_showcases_a_p.png'}" 
+                 alt="${p.nome}" 
+                 onerror="this.src='/mnt/data/A_high-resolution_digital_photograph_showcases_a_p.png'"/>
+            <div class="info">
+              <div><strong>${p.nome}</strong> <span class="small">(${p.categoria})</span></div>
+              <div class="small">R$ ${Number(p.preco).toFixed(2)}</div>
+            </div>
+            <div class="acoes">
+              <button onclick="editar('${p.id}')">Editar</button>
+              <button class="warn" onclick="remover('${p.id}')">Remover</button>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      } catch (e) {
+        console.error("Erro ao listar pratos:", e);
+      }
+    }
+
+    function limparForm() {
+      document.getElementById("nome").value = "";
+      document.getElementById("preco").value = "";
+      document.getElementById("categoria").value = "Pratos";
+      document.getElementById("imagem").value = "";
+      localStorage.removeItem("edit_prato_id");
+    }
+
+    function editar(id) {
+      fetch(API + "/pratos")
+        .then(r => r.json())
+        .then(pratos => {
+          const p = pratos.find(x => x.id === id);
+          if (!p) return alert("Prato não encontrado");
+          document.getElementById("nome").value = p.nome;
+          document.getElementById("preco").value = p.preco;
+          document.getElementById("categoria").value = p.categoria || "Pratos";
+          document.getElementById("imagem").value = p.imagem || "";
+          localStorage.setItem("edit_prato_id", id);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .catch(e => console.error(e));
+    }
+
+    async function salvarPrato() {
+      const nome = document.getElementById("nome").value.trim();
+      const preco = parseFloat(document.getElementById("preco").value);
+      const categoria = document.getElementById("categoria").value;
+      const imagem = document.getElementById("imagem").value.trim();
+
+      if (!nome || isNaN(preco)) return alert("Nome e preço são obrigatórios");
+
+      const editId = localStorage.getItem("edit_prato_id");
+      try {
+        if (editId) {
+          const res = await fetch(API + "/pratos/" + editId, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json", "x-auth-token": token },
+            body: JSON.stringify({ nome, preco, categoria, imagem })
+          });
+          if (!res.ok) throw new Error("Erro ao editar");
+          showMsg("Prato atualizado");
+        } else {
+          const res = await fetch(API + "/pratos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-auth-token": token },
+            body: JSON.stringify({ nome, preco, categoria, imagem })
+          });
+          if (!res.ok) throw new Error("Erro ao criar");
+          showMsg("Prato criado");
+        }
+        limparForm();
+        listarPratos();
+      } catch (e) {
+        console.error(e);
+        alert("Erro ao salvar prato (ver console).");
+      }
+    }
+
+    async function remover(id) {
+      if (!confirm("Remover este prato?")) return;
+      try {
+        const res = await fetch(API + "/pratos/" + id, {
+          method: "DELETE",
+          headers: { "x-auth-token": token }
+        });
+        if (!res.ok) throw new Error("Erro ao remover");
+        listarPratos();
+        showMsg("Prato removido");
+      } catch (e) {
+        console.error(e);
+        alert("Erro ao remover prato.");
+      }
+    }
+
+    function logout() {
+      fetch(API + "/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-auth-token": token }
+      }).finally(() => {
+        localStorage.removeItem("pagzap_token");
+        window.location.href = "gestor-login.html";
+      });
+    }
+
+    function showMsg(text) {
+      const old = document.querySelector('.msg-inline');
+      if (old) old.remove();
+      const el = document.createElement('div');
+      el.className = 'msg-inline';
+      el.textContent = text;
+      document.querySelector('.grid > .card:first-child').appendChild(el);
+      setTimeout(() => el.remove(), 2500);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cardápio da Mesa - PagZap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        #qrcode-container {
+            border: 10px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 10px;
+            background: white;
+            max-width: 350px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Escaneie para Ver o Cardápio!</h1>
+    
+    <div id="qrcode-container">
+        <img id="qr-code-img" 
+             src="/imagens/mesa_1_qr.png" 
+             alt="QR Code da Mesa" 
+             style="width: 100%; height: auto;">
+    </div>
+
+    <p style="margin-top: 20px; font-size: 0.9em; color: #555;"></p>
+
+    <script>
+        window.onload = function() {
+            // Este script agora apenas garante a funcionalidade de clique/escaneamento no PC.
+            const imgElement = document.getElementById('qr-code-img');
+            const urlAleatoria = 'http://localhost:3000/mesa-aleatoria';
+
+            // Permite que você clique na imagem para simular o escaneamento no PC
+            imgElement.onclick = function() {
+                window.location.href = urlAleatoria;
+            };
+            
+            // Se a imagem local não carregar, avisa (opcional)
+            imgElement.onerror = function() {
+                console.error("Erro ao carregar a imagem do QR Code. Verifique se o arquivo qrcode_aleatorio.png existe na pasta 'imagens'.");
+                // Fallback para texto em caso de erro
+                imgElement.style.display = 'none';
+                document.getElementById('qrcode-container').innerHTML += '<p style="color:red;">FALHA: Imagem não encontrada! Clique <a href="/mesa-aleatoria">AQUI</a>.</p>';
+            };
+        };
+    </script>
+</body>
+</html>

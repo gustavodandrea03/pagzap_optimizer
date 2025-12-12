@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Login Gestor - PagZap</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f6f9; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; }
+    .card { background:white; padding:24px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.08); width:360px; }
+    h2 { color:#007bff; margin-top:0; }
+    label{ display:block; margin:10px 0 6px; font-weight:600; }
+    input{ width:100%; padding:10px; border-radius:6px; border:1px solid #ddd; box-sizing:border-box; }
+    button{ margin-top:14px; width:100%; padding:10px; background:#007bff; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:700; }
+    .msg{ margin-top:12px; color:#c00; }
+    .link { margin-top:12px; text-align:center; font-size:13px; }
+    .link a { color:#007bff; text-decoration:none; font-weight:700; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Entrar (Gestor)</h2>
+    <label for="usuario">Usuário</label>
+    <input id="usuario" value="admin" />
+    <label for="senha">Senha</label>
+    <input id="senha" type="password" value="1234" />
+    <button id="btnLogin">Entrar</button>
+    <div class="msg" id="msg"></div>
+    <div class="link"><a href="/">Voltar ao Painel</a></div>
+  </div>
+
+  <script>
+    const API = "http://localhost:3000";
+    document.getElementById("btnLogin").addEventListener("click", async () => {
+      const usuario = document.getElementById("usuario").value;
+      const senha = document.getElementById("senha").value;
+      document.getElementById("msg").textContent = "";
+      try {
+        const res = await fetch(API + "/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ usuario, senha })
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          document.getElementById("msg").textContent = err.erro || "Credenciais inválidas";
+          return;
+        }
+        const data = await res.json();
+        localStorage.setItem("pagzap_token", data.token);
+        window.location.href = "gestor.html";
+      } catch (e) {
+        document.getElementById("msg").textContent = "Erro de rede";
+      }
+    });
+  </script>
+</body>
+</html>

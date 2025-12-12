@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório de Cardápio - Menu Engineering</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Removido padding do body para permitir navbar de largura total */
+    body {
+        font-family: Arial, sans-serif;
+background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
+        color: #333;
+        margin: 0;
+        padding: 0; /* <-- Removido o padding lateral aqui */
+    }
+
+    h1 {
+        text-align: center;
+        color: #007bff;
+        margin-bottom: 25px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px 40px; /* <-- Padding lateral agora só no conteúdo principal */
+    }
+
+    section {
+        margin-top: 40px;
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #444;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 6px;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    th {
+        background: #e0f0ff;
+    }
+
+    /* Cores Menu Engineering */
+    .Estrela { 
+        background-color: #d4edda;
+        color: #155724; 
+        font-weight: bold; 
+    } 
+
+    .Arado { 
+        background-color: #fff3cd;
+        color: #856404; 
+        font-weight: bold; 
+    } 
+
+    .Quebra-cabeça { 
+        background-color: #cce5ff;
+        color: #004085; 
+        font-weight: bold; 
+    } 
+
+    .Cão { 
+        background-color: #f8d7da;
+        color: #721c24; 
+        font-weight: bold; 
+    }
+
+    /* Resumo Executivo */
+    #resumo-executivo {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .kpi-card {
+        background: #f2f2f2;
+        padding: 15px 20px;
+        border-radius: 8px;
+        width: 22%;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .kpi-card strong {
+        display: block;
+        font-size: 24px;
+        color: #007bff;
+        margin-top: 5px;
+    }
+
+    canvas {
+        display: block;
+        margin: 25px auto;
+        max-width: 600px;
+        height: 350px !important; 
+    }
+
+    .header-link { 
+        text-align: center; 
+        margin-bottom: 20px; 
+    }
+
+    .header-link a { 
+        color: #007bff; 
+        text-decoration: none; 
+        font-weight: bold; 
+    }
+
+    /* Navbar de largura total - agora sim preenche todo o topo */
+    .navbar {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        background-color: #1c3d5a; 
+        padding: 15px 0;
+        margin-bottom: 30px;
+        width: 100%;
+        border-radius: 0; /* Sem bordas arredondadas para preencher completamente */
+        flex-wrap: wrap;
+    }
+    .navbar a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .navbar a:hover {
+        background-color: #495057;
+    }
+    .navbar a.active {
+        background-color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar fora do container e com largura total -->
+  <nav class="navbar" id="main-navbar">
+    <a href="index.html" id="nav-comandas">Monitoramento de Mesas</a>
+    <a href="cozinha.html" id="nav-cozinha">Painel da Cozinha</a>
+    <a href="gestor.html" id="nav-gestor">Gestão de Cardápio</a>
+    <a href="relatorio.html" id="nav-relatorio">Relatório de Vendas</a>
+  </nav>
+
+  <div class="container">
+    <h1>📈 Relatório de Otimização de Cardápio (Menu Engineering)</h1>
+    <div class="header-link">
+      <a href="gestor.html">← Voltar ao Painel de Gestão</a>
+    </div>
+
+    <section>
+      <h2>Resumo Executivo do Cardápio</h2>
+      <div id="resumo-executivo"></div>
+    </section>
+
+    <div id="relatorios"></div>
+  </div>
+
+  <script>
+    const API_URL = "http://localhost:3000";
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const navRelatorio = document.getElementById('nav-relatorio');
+        if (navRelatorio) {
+            navRelatorio.classList.add('active');
+        }
+    });
+
+    window.onload = carregarAnalise;
+
+    async function carregarAnalise() {
+      try {
+        const resposta = await fetch(`${API_URL}/analise-cardapio`);
+        const dados = await resposta.json();
+
+        if (!dados.analise || dados.analise.length === 0) {
+          document.getElementById("relatorios").innerHTML = "<p style='text-align:center;'>Nenhum dado de vendas encontrado para análise.</p>";
+          return;
+        }
+
+        const analiseCompleta = dados.analise;
+        const medias = dados.medias;
+
+        calcularEExibirResumo(analiseCompleta, medias);
+        agruparEExibirRelatorios(analiseCompleta);
+
+      } catch (erro) {
+        console.error("Erro ao carregar análise:", erro);
+        document.getElementById("relatorios").innerHTML = "<p style='text-align:center; color:red;'>Falha ao carregar dados do servidor.</p>";
+      }
+    }
+
+    function calcularEExibirResumo(analise, medias) {
+      const faturamentoTotal = analise.reduce((acc, p) => acc + p.receita, 0);
+      const margemTotal = analise.reduce((acc, p) => acc + p.margemTotal, 0);
+      const classificacoes = {};
+      const totalItens = analise.length;
+
+      analise.forEach(p => {
+        const cls = p.classificacao;
+        classificacoes[cls] = (classificacoes[cls] || 0) + 1;
+      });
+     
+      const resumoDiv = document.getElementById("resumo-executivo");
+      resumoDiv.innerHTML = `
+        <div class="kpi-card">Faturamento Total <strong>R$ ${faturamentoTotal.toFixed(2)}</strong></div>
+        <div class="kpi-card">Margem Total <strong>R$ ${margemTotal.toFixed(2)}</strong></div>
+        <div class="kpi-card Arado">Média Margem/Item <strong>R$ ${medias.margem.toFixed(2)}</strong></div>
+        <div class="kpi-card Estrela">Média Popularidade <strong>${medias.popularidade.toFixed(1)} uni.</strong></div>
+      `;
+
+      Object.entries(classificacoes).forEach(([cls, count]) => {
+        const cor = cls.replace(/\s/g, '');
+        resumoDiv.innerHTML += `
+          <div class="kpi-card ${cor}">
+            ${cls} <strong>${count} / ${totalItens} pratos</strong>
+          </div>
+        `;
+      });
+    }
+
+    function agruparEExibirRelatorios(analiseCompleta) {
+      const categorias = {};
+      analiseCompleta.forEach(prato => {
+        const cat = prato.categoria || "Outros";
+        if (!categorias[cat]) categorias[cat] = [];
+        categorias[cat].push(prato);
+      });
+
+      const container = document.getElementById("relatorios");
+     
+      Object.entries(categorias).forEach(([categoria, itens]) => {
+        const section = document.createElement("section");
+        section.innerHTML = `
+          <h2>Desempenho da Categoria: ${categoria.charAt(0).toUpperCase() + categoria.slice(1)}</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Prato</th>
+                <th>Qtd Vendida</th>
+                <th>Receita Total (R$)</th>
+                <th>Margem Total (R$)</th>
+                <th>Margem/Item (R$)</th>
+                <th>Classificação</th>
+                <th>Ação Sugerida</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itens.map(p => `
+                <tr>
+                  <td>${p.nome}</td>
+                  <td>${p.quantidade}</td>
+                  <td>R$ ${p.receita.toFixed(2)}</td>
+                  <td>R$ ${p.margemTotal.toFixed(2)}</td>
+                  <td>R$ ${p.margemPorItem.toFixed(2)}</td>
+                  <td class="${p.classificacao.replace(/\s/g, '')}">${p.classificacao.toUpperCase()}</td>
+                  <td>${p.recomendacao}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <canvas id="grafico-${categoria}-pizza"></canvas>
+        `;
+        container.appendChild(section);
+
+        const labels = itens.map(p => p.nome);
+        const receitas = itens.map(p => p.receita);
+        const cores = itens.map(p => {
+          switch (p.classificacao) {
+            case 'Estrela': return 'rgba(40, 167, 69, 0.7)';
+            case 'Arado': return 'rgba(255, 193, 7, 0.7)';
+            case 'Quebra-cabeça': return 'rgba(0, 123, 255, 0.7)';
+            case 'Cão': return 'rgba(220, 53, 69, 0.7)';
+            default: return 'rgba(108, 117, 125, 0.7)';
+          }
+        });
+
+        new Chart(document.getElementById(`grafico-${categoria}-pizza`), {
+          type: 'pie',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Receita (R$)',
+              data: receitas,
+              backgroundColor: cores
+            }]
+          },
+          options: {
+            plugins: {
+              legend: { position: 'bottom' },
+              title: { 
+                display: true, 
+                text: `Distribuição de Receita por Item (${categoria})` 
+              }
+            }
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
