@@ -1,4 +1,3 @@
-// server.js - PagZap (Com Rota QR Code Aleatória e Timer de 35s)
 import express from "express";
 import cors from "cors";
 import fs from "fs";
@@ -49,7 +48,7 @@ app.get("/mesa_qr_code.html", (req, res) => {
 
 // === ROTA PRINCIPAL: GERA MESA ALEATÓRIA E REDIRECIONA ===
 app.get("/mesa-aleatoria", (req, res) => {
-    // Escolhe aleatoriamente entre 1, 2, 3, 4, 5.
+    // Escolhe aleatoriamente entre mesas
     const mesaAleatoria = Math.floor(Math.random() * 5) + 1;
     
     // Redireciona o cliente para o cardápio da mesa aleatória
@@ -62,7 +61,7 @@ const DB_PATH = path.join(__dirname, "db.json");
 // =============================
 // Mercado Pago SDK
 // =============================
-const ACCESS_TOKEN = "TEST-6035047548343306-062222-92c47ab4de3216b61ea3dd308b6c8d93-2019074163"; // ⚠ use seu token
+const ACCESS_TOKEN = "TEST-6035047548343306-062222-92c47ab4de3216b61ea3dd308b6c8d93-2019074163"; //
 
 const mpClient = new MercadoPagoConfig({
   accessToken: ACCESS_TOKEN,
@@ -205,7 +204,7 @@ app.patch("/pedidos/:id", (req, res) => {
 
     const mesa = pedido.mesa;
 
-    // === TEMPORIZADOR DE 35 SEGUNDOS ===
+    // === TEMPORIZADOR ===
     const tempoLiberacao = 35000; 
     console.log(`[Timer] Mesa ${mesa} mudou para comendo. Será liberada em 35 segundos.`);
 
@@ -230,10 +229,9 @@ app.patch("/pedidos/:id", (req, res) => {
   res.json(pedido);
 });
 
-// REMOVIDA ROTA: app.post("/pedidos/fechar/:mesa", ...)
 
 // =============================
-// PIX BRICKS – CRIAÇÃO DE PAGAMENTO
+// CRIAÇÃO DE PAGAMENTO PIX
 // =============================
 app.post("/create_pix", async (req, res) => {
   console.log("======== REQUISIÇÃO /create_pix =========");
@@ -267,7 +265,7 @@ app.post("/create_pix", async (req, res) => {
     console.log("SUCESSO MP, ID PAGAMENTO:", pagamento.id);
     console.log("STATUS MP:", pagamento.status);
 
-    // === ATUALIZAÇÃO DO PEDIDO COM O PAYMENT ID (NECESSÁRIO PARA SIMULAÇÃO) ===
+    // === ATUALIZAÇÃO DO PEDIDO COM O PAYMENT ID ===
     const pedido = pedidos.find(p => p.id === pedidoId);
     if (pedido) {
       pedido.payment_id = pagamento.id;
@@ -313,7 +311,7 @@ app.patch("/pagamentos/:id/aprovar", async (req, res) => {
         const pedidoIndex = pedidos.findIndex(p => p.payment_id === id);
         
         if (pedidoIndex !== -1) {
-            // Marca o pedido como 'aguardando' (Cozinha processa a entrega)
+            // Marca o pedido como 'aguardando' (cozinha processa a entrega)
             pedidos[pedidoIndex].status = 'aguardando'; 
             
             const db = loadDB();
@@ -338,7 +336,6 @@ app.patch("/pagamentos/:id/aprovar", async (req, res) => {
 // ANALISE CARDÁPIO (MENU ENGINEERING)
 // =============================
 app.get("/analise-cardapio", (req, res) => {
-// ... (restante da rota de análise, inalterada)
   try {
     const db = loadDB();
     const vendas = db.vendas || [];
@@ -532,4 +529,5 @@ app.get("/index.html", (req, res) => {
 const PORT = 3000;
 app.listen(PORT, () =>
   console.log(`Servidor rodando em http://localhost:${PORT}`)
+
 );
