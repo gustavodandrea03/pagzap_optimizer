@@ -9,7 +9,7 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
+background: #e0effa; /* Azul marinho mais escuro */
   margin: 0;
       padding: 0;
       color: #333;
@@ -21,7 +21,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
       padding: 20px;
     }
 
-    /* Estilo para a Barra de Navegação - agora de largura total */
+    /* Estilo para a Barra de Navegação */
     .navbar {
       display: flex;
       justify-content: center;
@@ -29,7 +29,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
       background-color: #1c3d5a;
       padding: 10px 0;
       margin-bottom: 30px;
-      width: 100%; /* <-- Adicionado para preencher toda a largura */
+      width: 100%; /* <-- largura total */
     }
     .navbar a {
       color: #f0f4f8;
@@ -99,7 +99,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
 
     .itens {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsivo com tamanho mínimo */
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
         gap: 15px;
     }
 
@@ -107,16 +107,16 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
         border: 2px solid transparent;
         border-radius: 10px;
         padding: 10px;
-        transition: all 0.3s ease-in-out; /* Adicionamos a transição para a animação ser suave */
+        transition: all 0.3s ease-in-out; 
     text-align: center;
     cursor: pointer;
-    background-color: #fff; /* Garante que o fundo seja branco */
+    background-color: #fff; 
 }
 
-/* EFEITO HOVER: Animação ao passar o mouse */
+/* HOVER: Animação ao passar o mouse */
 .item:hover {
-    transform: scale(1.03); /* Aumenta ligeiramente o tamanho (Animação) */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Adiciona uma sombra mais forte */
+    transform: scale(1.03); /* animação para aumentar o tamanho */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Adiciona uma sombra */
 }
 
     .item img {
@@ -144,15 +144,15 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
     }
     button.finalizar:hover { background-color: #0056b3; }
 
-    /* Container PIX (Adicionamos um fundo mais sólido e sombra melhor) */
+    /* Container PIX */
 #pix-container {
     display: none; 
     max-width: 420px;
     margin: 30px auto;
-    padding: 30px; /* Aumenta o padding interno */
-    border-radius: 16px; /* Borda mais suave */
-    background: #ffffff; /* Fundo branco limpo */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Sombra mais destacada */
+    padding: 30px; 
+    border-radius: 16px; 
+    background: #ffffff; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
     text-align: center;
     position: fixed;
     top: 50%;
@@ -166,7 +166,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
     margin-bottom: 25px;
 }
 
-/* Ajuste o botão Fechar */
+/* Ajuste no botão Fechar */
 #pix-container button[onclick="fecharPix()"] {
     background: #6c757d; 
     padding: 10px 20px;
@@ -182,8 +182,8 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
 
     /* Container do Resumo do Pedido */
 #resumo {
-    background-color: #f8f9fa; /* Fundo levemente cinza */
-    border: 1px solid #dee2e6; /* Borda sutil */
+    background-color: #f8f9fa; 
+    border: 1px solid #dee2e6; 
     border-radius: 10px;
     padding: 20px;
     margin-top: 30px;
@@ -217,7 +217,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
 
 /* Botão Principal: Confirmar Pedido */
 #confirmar-pedido {
-    background-color: #28a745; /* Verde de sucesso */
+    background-color: #28a745; 
     color: white;
     border: none;
     padding: 12px 20px;
@@ -235,7 +235,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
 
 /* Botão Secundário: Voltar */
 #voltar {
-    background-color: #6c757d; /* Cinza secundário */
+    background-color: #6c757d;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -257,8 +257,8 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
     color: white;
     padding: 16px 20px;
     border-radius: 8px;
-    opacity: 0; /* Inicia invisível */
-    transition: opacity 0.5s, transform 0.3s; /* Adiciona a transição */
+    opacity: 0; 
+    transition: opacity 0.5s, transform 0.3s; 
     transform: translateY(20px);
     z-index: 1000;
 }
@@ -278,7 +278,6 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
 </head>
 
 <body>
-  <!-- Navbar movida para fora do app-container e agora ocupa largura total -->
   <nav class="navbar" id="main-navbar">
     <a href="index.html" id="nav-comandas">Monitoramento de Mesas</a>
     <a href="cozinha.html" id="nav-cozinha">Painel da Cozinha</a>
@@ -435,13 +434,13 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
     }
 
     function toggleItem(div, item, categoria) {
-        // Encontra o índice do item, mas apenas para fins de verificar se ele JÁ está no pedido
+        // Encontra o índice do item para fins de verificar se ele JÁ está no pedido
         const index = itensSelecionados.findIndex(i => i.nome === item.nome);
         const itemExistente = itensSelecionados.find(i => i.nome === item.nome); // Verifica se o item já existe
 
-        // Se o item JÁ EXISTIR, vamos apenas aumentar a quantidade, não remover.
+        // Se o item JÁ EXISTIR, aumenta a quantidade, não remover.
         if (itemExistente) {
-            // Aumentar a quantidade (Adicionar mais 1)
+            // Adicionar mais 1
             itemExistente.quantidade = (itemExistente.quantidade || 1) + 1;
             showToast(`+1 ${item.nome} adicionado.`);
         } else {
@@ -455,12 +454,11 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
             showToast(`${item.nome} adicionado.`);
         }
 
-        // -------------------------------------------------------------
-        // NOVO: Lógica de Piscar (Feedback Visual)
+        // efeito de Piscar (Feedback Visual)
         // -------------------------------------------------------------
         div.classList.add("selecionado");
         
-        // Remove a classe 'selecionado' após 1 segundo (1000ms)
+        // Remove a classe 'selecionado' após 1 segundo
         setTimeout(() => {
             div.classList.remove("selecionado");
         }, 1000);
@@ -479,7 +477,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
             return;
         }
 
-        // NOVO: Exibe a quantidade e o total daquele item
+        // Exibe a quantidade e o total daquele item
         resumoDiv.innerHTML = itensSelecionados
             .map(i => {
                 const subtotal = i.preco * (i.quantidade || 1);
@@ -487,7 +485,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
             })
             .join("<br>");
 
-        // NOVO: Calcula o total geral multiplicando preço x quantidade
+        // NCalcula o total geral multiplicando preço x quantidade
         const total = itensSelecionados.reduce((acc, i) => acc + (i.preco * (i.quantidade || 1)), 0);
         totalDiv.textContent = `Total: R$ ${total.toFixed(2)}`;
     }
@@ -635,12 +633,12 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
       }
     }
 function voltar() {
-        // Verifica se estamos no Modo Cliente (via URL ?mesa=X)
+        // Verifica se esta no Modo Cliente (via URL ?mesa=X)
         const params = new URLSearchParams(window.location.search);
         const isClienteMode = params.get('mesa');
         
         if (isClienteMode) {
-            // MODO CLIENTE (Acessado via QR Code)
+            // MODO CLIENTE (Acesso via QR Code)
             
             if (itensSelecionados.length > 0) {
                 // Se houver itens selecionados, limpa a seleção e volta para o cardápio
@@ -651,19 +649,14 @@ function voltar() {
             
             // Reabre o cardápio (se estiver escondido, como no resumo)
             document.getElementById("cardapio").style.display = "block";
-            document.getElementById("resumo").style.display = "block"; // O Resumo já faz parte do cardapioDiv, mas garantimos que está visível.
+            document.getElementById("resumo").style.display = "block"; 
             
-            // O botão "Voltar" no resumo do pedido do cliente deve voltar para a seleção de itens.
-            // Se o botão "Voltar" estiver sendo exibido após o PIX, ele deve voltar para o Cardápio (ou para o estado inicial).
             
-            // Se o botão for clicado na tela de resumo/seleção, garantimos que a seleção está limpa e voltamos para a vista principal.
-            
-            // Não faça nada que tire o cliente da mesa.
             return;
         } 
         
-        // MODO GESTÃO/GARÇOM (Neste modo, o botão "Voltar" só aparece se estiver em 'abrirCardapio' 
-        // e ele deve, sim, voltar para o monitoramento de mesas).
+        // MODO GESTÃO/GARÇOM 
+       
         
         document.getElementById("cardapio").style.display = "none";
         itensSelecionados = [];
@@ -675,4 +668,5 @@ function voltar() {
     }
   </script>
 </body>
+
 </html>
