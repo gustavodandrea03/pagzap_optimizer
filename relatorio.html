@@ -6,13 +6,12 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
-    /* Removido padding do body para permitir navbar de largura total */
     body {
         font-family: Arial, sans-serif;
-background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
+background: #e0effa; /* Azul marinho  mais escuro */
         color: #333;
         margin: 0;
-        padding: 0; /* <-- Removido o padding lateral aqui */
+        padding: 0; 
     }
 
     h1 {
@@ -24,7 +23,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
     .container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 0 20px 40px; /* <-- Padding lateral agora só no conteúdo principal */
+        padding: 0 20px 40px; 
     }
 
     section {
@@ -128,7 +127,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
         font-weight: bold; 
     }
 
-    /* Navbar de largura total - agora sim preenche todo o topo */
+    /* Navbar */
     .navbar {
         display: flex;
         justify-content: center;
@@ -137,7 +136,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
         padding: 15px 0;
         margin-bottom: 30px;
         width: 100%;
-        border-radius: 0; /* Sem bordas arredondadas para preencher completamente */
+        border-radius: 0; /* sem bordas arredondadas para preencher completamente */
         flex-wrap: wrap;
     }
     .navbar a {
@@ -157,7 +156,6 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
   </style>
 </head>
 <body>
-  <!-- Navbar fora do container e com largura total -->
   <nav class="navbar" id="main-navbar">
     <a href="index.html" id="nav-comandas">Monitoramento de Mesas</a>
     <a href="cozinha.html" id="nav-cozinha">Painel da Cozinha</a>
@@ -322,4 +320,5 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
     }
   </script>
 </body>
+
 </html>
