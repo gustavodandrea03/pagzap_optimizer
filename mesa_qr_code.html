@@ -42,7 +42,6 @@
 
     <script>
         window.onload = function() {
-            // Este script agora apenas garante a funcionalidade de clique/escaneamento no PC.
             const imgElement = document.getElementById('qr-code-img');
             const urlAleatoria = 'http://localhost:3000/mesa-aleatoria';
 
@@ -51,7 +50,7 @@
                 window.location.href = urlAleatoria;
             };
             
-            // Se a imagem local não carregar, avisa (opcional)
+            // mostra um aviso se a imagem local não carregar
             imgElement.onerror = function() {
                 console.error("Erro ao carregar a imagem do QR Code. Verifique se o arquivo qrcode_aleatorio.png existe na pasta 'imagens'.");
                 // Fallback para texto em caso de erro
@@ -61,4 +60,5 @@
         };
     </script>
 </body>
+
 </html>
