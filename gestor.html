@@ -9,13 +9,13 @@
     * { box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
-background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
+background: #e0effa; /* Azul marinho mais escuro */
       margin: 0;
       padding: 0;
       color: #333;
     }
 
-    /* Navbar centralizada - mantida como você queria */
+    /* Navbar centralizada  */
     .navbar {
       display: flex;
       justify-content: center;
@@ -110,7 +110,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
     margin-bottom:12px; 
     border-bottom: 1px solid #eee; 
     padding-bottom: 10px; 
-    transition: background-color 0.2s; /* Transição para o hover */
+    transition: background-color 0.2s; 
 }
 
 .prato:hover {
@@ -154,7 +154,7 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
     background-color: #c82333;
 }
 
-/* Stats (Adicionando Efeito de Hover) */
+/* Stats  */
 .stat { 
     background:#f1f7ff; 
     padding:10px 15px; 
@@ -322,11 +322,10 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
       const navGestor = document.getElementById('nav-gestor');
       if (navGestor) navGestor.classList.add('active');
       
-      // CORREÇÃO: Chamada única para carregar os pratos após o DOM estar pronto
+      // Chamada única para carregar os pratos após o DOM estar pronto
       listarPratos();
     });
 
-    // A linha "window.onload = listarPratos;" foi removida permanentemente para evitar a duplicação.
 
     async function listarPratos() {
       try {
@@ -472,4 +471,5 @@ background: #e0effa; /* NOVO: Azul marinho ligeiramente mais escuro */
     }
 </script>
 </body>
+
 </html>
