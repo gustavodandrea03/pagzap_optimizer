@@ -103,11 +103,11 @@ async function fazerPedido() {
 
     const pedidoCriado = await resposta.json();
 
-    // 2 — Inicia PIX chamando o backend (CORREÇÃO AQUI)
+    // 2 — Inicia PIX chamando o backend 
     const respostaPix = await fetch("http://localhost:3000/create_pix", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ total: pedidoCriado.total }) // <<< correto!
+      body: JSON.stringify({ total: pedidoCriado.total }) 
     });
 
     const dados = await respostaPix.json();
@@ -271,11 +271,11 @@ async function abrirComanda(numeroMesa) {
 
     const pedidoCriado = await resposta.json();
 
-    // PIX GERADO AQUI (CORRIGIDO)
+    // PIX GERADO 
     const respostaPix = await fetch(`${API_URL}/create_pix`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ total: pedidoCriado.total }) // <<< correto!
+      body: JSON.stringify({ total: pedidoCriado.total }) 
     });
 
     const dados = await respostaPix.json();
@@ -286,3 +286,4 @@ async function abrirComanda(numeroMesa) {
     console.error("Erro ao abrir comanda:", erro);
   }
 }
+
